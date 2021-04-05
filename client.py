@@ -13,7 +13,7 @@ if signup == "Y":
 	registrationdetails["name"]=username
 	registrationdetails["password"]=password
 	registrationdetails["email"]=email
-	response = requests.post("http://localhost:5000/register",headers = {'Accept': 'application/json'}, json= registrationdetails)
+	response = requests.post("http://54.205.252.26:5001/register",headers = {'Accept': 'application/json'}, json= registrationdetails)
 	input(response.text)
 
 # Login functionality
@@ -21,17 +21,17 @@ username = input("Enter user username: ")
 password = getpass('Password:')
 logindetails={}
 logindetails = {'username' : username,'password': password}
-response = requests.post("http://localhost:5000/login",headers = {'Accept': 'application/json'}, auth= (username,password), json= logindetails)
+response = requests.post("http://54.205.252.26:5001/login",headers = {'Accept': 'application/json'}, auth= (username,password), json= logindetails)
 responsecap = json.loads(response.text)
 
 # Fetching current books reviewed by the users
 input("Press enter to view you current review list: ")
 response_all={}
-response_all = requests.get("http://localhost:5000/records/all", headers = {"Bearer": responsecap['token'] })
+response_all = requests.get("http://54.205.252.26:5001/records/all", headers = {"Bearer": responsecap['token'] })
 print(response_all.text)
 bookname = input("Enter a Book Name: ")
 if response_all.text != "":
-	response_book = requests.get("http://localhost:5000/records/"+bookname)
+	response_book = requests.get("http://54.205.252.26:5001/records/"+bookname)
 insertneeded = input("Do you want to add a book review? (Y/N)")
 if insertneeded =="Y":
 	input("Using the book name to search. Press enter. ")
@@ -63,14 +63,14 @@ if insertneeded =="Y":
 	bookreview["libid"]=booklist[int(reviewid)][2]
 	print(bookreview)
 	input()
-	response_book = requests.post("http://localhost:5000/records/add", 
+	response_book = requests.post("http://54.205.252.26:5001/records/add", 
 			headers = {'Accept': 'application/json',"Bearer": responsecap['token']}, json= bookreview)
 
 # The delete request to delete a review
 deleleteneeded = input("Do you want to delete a book? (Y/N) ")
 if deleleteneeded == "Y":
 	bookid = input("Enter a Book id to delete: ")
-	response_book = requests.delete("http://localhost:5000/records/delete/"+bookid,headers = {"Bearer": responsecap['token']})
+	response_book = requests.delete("http://54.205.252.26:5001/records/delete/"+bookid,headers = {"Bearer": responsecap['token']})
 	print(response_book.status_code)
 
 #Performing a put request to update book review
@@ -82,7 +82,7 @@ else:
 		review = input("Enter the review content : ")
 		bookreview[bookid] = review
 		print(bookreview)
-		response_book = requests.put("http://localhost:5000/records/update/"+bookid, 
+		response_book = requests.put("http://54.205.252.26:5001/records/update/"+bookid, 
 			headers = {'Accept': 'application/json',"Bearer": responsecap['token']}, json= bookreview)
 		print(response_book)
 print("Thank you")
